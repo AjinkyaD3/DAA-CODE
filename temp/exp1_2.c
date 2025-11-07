@@ -1,3 +1,10 @@
+/*
+314448 (A) : Laboratory Practice-I (Design and Analysis of Algorithm)
+Problem Statement:
+Write a program to implement Fractional knapsack using Greedy algorithm and
+0/1 knapsack using dynamic programming. Show that Greedy strategy does not
+necessarily yield an optimal solution over a dynamic programming approach.
+*/
 #include <iostream>
 #include <algorithm>
 using namespace std;
