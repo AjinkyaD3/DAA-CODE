@@ -85,14 +85,6 @@ int main() {
     cout << "0/1 Knapsack (Dynamic Programming): " << zeroOneResult << endl;
     cout << "--------------------------------------------------\n";
 
-    cout << "\nObservation:\n";
-    cout << "→ Fractional Knapsack (Greedy) allows taking fractions of items, "
-         << "so it can yield a higher total value.\n";
-    cout << "→ 0/1 Knapsack (DP) allows only whole items but guarantees the "
-         << "optimal solution for discrete cases.\n";
-    cout << "→ Hence, Greedy does not necessarily yield the optimal solution "
-         << "compared to Dynamic Programming.\n";
-
     delete[] items;
     return 0;
 }
