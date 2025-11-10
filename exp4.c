@@ -7,102 +7,62 @@ and the cost using LC Branch and Bound.
 #include <iostream>
 #include <vector>
 #include <climits>
+#include <queue>
 using namespace std;
-class TSP {
-  private:
-    int n;                            // Number of cities
-    vector<vector<int>> dist;         // Distance matrix
-    int minCost = INT_MAX;            // Minimum cost found
-    vector<int> bestPath;             // Best path found
 
-    // Helper function to calculate the lower bound (minimum cost estimate) for a
-    // partial path
-    int calculateLowerBound(const vector<bool>& visited) {
-        int bound = 0;
-        for (int i = 0; i < n; ++i) {
-            if (visited[i]) {
-                int minEdge = INT_MAX;
-                for (int j = 0; j < n; ++j) {
-                    if (i != j && !visited[j]) {
-                        minEdge = min(minEdge, dist[i][j]);
-                    }
-                }
-                if (minEdge != INT_MAX) {
-                    bound += minEdge;
-                }
-            }
-        }
-        return bound;
-    }
-
-    // Recursive function to explore paths using Branch and Bound
-    void branchAndBoundUtil(vector<int>& path, vector<bool>& visited,
-                            int currentCost, int level) {
-        if (level == n) {
-            int totalCost = currentCost + dist[path[level - 1]][path[0]];
-            if (totalCost < minCost) {
-                minCost = totalCost;
-                bestPath = path;
-                bestPath.push_back(path[0]);  // Complete the cycle
-            }
-            return;
-        }
-
-        for (int i = 0; i < n; ++i) {
-            if (!visited[i]) {
-                int previousCity = path[level - 1];
-                path.push_back(i);
-                visited[i] = true;
-
-                int lowerBound = calculateLowerBound(visited);
-                int newCost = currentCost + dist[previousCity][i];
-                if (newCost + lowerBound < minCost) {
-                    branchAndBoundUtil(path, visited, newCost, level + 1);
-                }
-
-                visited[i] = false;
-                path.pop_back();
-            }
-        }
-    }
-
-  public:
-    TSP(int cities, const vector<vector<int>>& distance)
-        : n(cities), dist(distance) {}
-
-    void solve() {
-        vector<int> path = {0};  // Start from city 0
-        vector<bool> visited(n, false);
-        visited[0] = true;
-        branchAndBoundUtil(path, visited, 0, 1);
-    }
-
-    void printSolution() const {
-        cout << "Minimum Cost: " << minCost << endl;
-        cout << "Optimal Path: ";
-        for (int city : bestPath) {
-            cout << city << " ";
-        }
-        cout << endl;
-    }
+struct Node{
+    vector<int> path;
+    vector<bool> vis;
+    int cost, lb, lvl;
+    bool operator>(const Node& o) const { return lb > o.lb; }
 };
 
-int main() {
-    int n;
-    cout << "Enter the number of cities: ";
-    cin >> n;
+int boundCalc(const Node& nd, vector<vector<int>>& d, int n){
+    int b = nd.cost, last = nd.path.back();
+    for(int i=0;i<n;i++){
+        if(!nd.vis[i]){
+            int mn = INT_MAX;
+            for(int j=0;j<n;j++) if(i!=j) mn = min(mn, d[j][i]);
+            b += mn;
+        }
+    }
+    return b;
+}
 
-    vector<vector<int>> dist(n, vector<int>(n));
-    cout << "Enter the distance matrix:" << endl;
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            cin >> dist[i][j];
+int main(){
+    int n; cin>>n;
+    vector<vector<int>> d(n, vector<int>(n));
+    for(int i=0;i<n;i++) for(int j=0;j<n;j++) cin>>d[i][j];
+
+    priority_queue<Node,vector<Node>,greater<Node>> pq;
+    Node st; 
+    st.path={0}; st.vis=vector<bool>(n,false); st.vis[0]=true;
+    st.cost=0; st.lvl=1; st.lb = boundCalc(st,d,n);
+    pq.push(st);
+
+    int best = INT_MAX; vector<int> bestPath;
+
+    while(!pq.empty()){
+        Node cur = pq.top(); pq.pop();
+        if(cur.lb >= best) continue;
+        if(cur.lvl == n){
+            int total = cur.cost + d[cur.path.back()][0];
+            if(total < best){ best = total; bestPath = cur.path; bestPath.push_back(0); }
+            continue;
+        }
+        for(int i=0;i<n;i++){
+            if(!cur.vis[i]){
+                Node nxt = cur;
+                nxt.path.push_back(i);
+                nxt.vis[i]=true;
+                nxt.cost += d[cur.path.back()][i];
+                nxt.lvl++;
+                nxt.lb = boundCalc(nxt,d,n);
+                if(nxt.lb < best) pq.push(nxt);
+            }
         }
     }
 
-    TSP tsp(n, dist);
-    tsp.solve();
-    tsp.printSolution();
-
-    return 0;
+    cout<<"Minimum Cost: "<<best<<"\nPath: ";
+    for(int i: bestPath) cout<<i<<" ";
 }
