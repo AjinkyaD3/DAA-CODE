@@ -87,15 +87,23 @@ int knapsackDP(int C, Item a[], int n) {
 
 int main() {
     int n, C;
+
+    cout << "Enter number of items: ";
     cin >> n;
 
     Item a[n];
-    for(int i=0; i<n; i++)
-        cin >> a[i].v >> a[i].w;
 
+    cout << "Enter value and weight of each item:\n";
+    for(int i=0; i<n; i++) {
+        cout << "Item " << i+1 << " (v w): ";
+        cin >> a[i].v >> a[i].w;
+    }
+
+    cout << "Enter knapsack capacity: ";
     cin >> C;
 
-    cout << "Fractional Greedy: " << fractionalKnapsack(C, a, n) << endl;
+    cout << "\nFractional Greedy: " << fractionalKnapsack(C, a, n) << endl;
     cout << "0/1 Greedy: " << greedy01(C, a, n) << endl;
     cout << "0/1 DP (Optimal): " << knapsackDP(C, a, n) << endl;
 }
+
