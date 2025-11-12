@@ -1,9 +1,3 @@
-/*
-314448 (A): Laboratory Practice-I (Design and Analysis of Algorithm)
-Problem Statement:
-Write a program to implement Bellman-Ford Algorithm using Dynamic Programming
-and verify the time complexity.
-*/
 #include <iostream>
 #include <vector>
 #include <climits>

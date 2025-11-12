@@ -1,9 +1,3 @@
-/*
-314448 (A): Laboratory Practice-I (Design and Analysis of Algorithm)
-Problem Statement:
-Write a recursive program to find the solution of placing n queens on the
-chessboard so that no two queens attack each other using Backtracking.
-*/
 #include <iostream>
 #include <vector>
 #include <cmath>

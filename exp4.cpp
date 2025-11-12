@@ -1,9 +1,3 @@
-/*
-314448 (A): Laboratory Practice-I (Design and Analysis of Algorithm)
-Problem Statement:
-Write a program to solve the travelling salesman problem and to print the path
-and the cost using LC Branch and Bound.
-*/
 #include <iostream>
 #include <vector>
 #include <climits>
